@@ -7,13 +7,13 @@ function Bird(canvas) {
   this.direction.x = null;
   this.direction.y = null;
   this.speed = 1;
-  this.status = 'flying';   // status of the bird can be: flying, hungry, feeding or dead
+  this.state = 'flying';   // status of the bird can be: flying, hungry, feeding or dead
 }
 
 Bird.prototype.fly = function(area) {
   // make the bird move randomly in the flying area
 
-  // set status to 'flying'
+  // set state to 'flying'
 
 }
 
@@ -43,6 +43,6 @@ Bird.prototype.onClick = function() {
 
   // if bird was clicked, move it to another area
 
-  // set status
+  // set state
 
 }
