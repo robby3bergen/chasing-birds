@@ -95,18 +95,18 @@ onCollission() > call Walk
 update()
 draw()
 
-### sky.js (flying area) ???
+### area.js (sky, ground and feeding zone) 
 
 -- properties
+canvasContext;
 background-image;
 x;
 y;
 width;
 height;
 
-### ground.js ???
-
-### feedingZone.js ???
+-- methods
+draw();
 
 
 ## States y States Transitions
@@ -136,6 +136,7 @@ Task definition in order of priority
   - area.js
 - create Constructors (main, game, bird, dog, area) with empty properties and functions
 - create html for splash, game and gameOver
+- create screen transitions (build > game > gameover)
 - draw the areas
 - draw one bird + dog
 - move the bird from the air to the feeding zone
@@ -144,8 +145,8 @@ Task definition in order of priority
 - move the dog to the feeding zone
 - move the dog randomly in the ground area (walk)
 - check for collisions
+- check gameover condition (to end the game)
 - set timer to show the remaining game time
-- create screen transitions (build > game > gameover)
 
 
 ## Links
