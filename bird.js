@@ -2,12 +2,12 @@
 
 function Bird(canvas) {
   this.canvasContext = canvas.getContext('2d');
-  this.position.x = null;
-  this.position.y = null;
-  this.direction.x = null;
-  this.direction.y = null;
+  this.backgroundColor = 'black';
+  this.size = 10;
+  this.position = {x: 30, y: 30};
+  this.direction = {x: 1, y: 1};     // x + 1 to move right, x -1 to move left, y + 1 to move down, y - 1 to move up
   this.speed = 1;
-  this.state = 'flying';   // status of the bird can be: flying, hungry, feeding or dead
+  this.state = 'flying';             // status of the bird can be: flying, hungry, feeding or dead
 }
 
 Bird.prototype.fly = function(area) {
@@ -29,9 +29,10 @@ Bird.prototype.updatePosition = function() {
 
 }
 
-Bird.prototype.draw = function() {
+Bird.prototype.draw = function(canvas) {
   // draw the bird on the canvas
-
+  this.canvasContext.fillStyle = this.backgroundColor;
+  this.canvasContext.fillRect(this.position.x, this.position.y, this.size, this.size);
 }
 
 Bird.prototype.onCollision = function() {

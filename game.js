@@ -44,6 +44,7 @@ Game.prototype.draw = function() {
   var canvasHeigth = this.canvas.height;
   var canvasWidth = this.canvas.width;
 
+  // ---- AREAS ----
   var sky = new Area(this.canvas, 0, 0, canvasWidth, 100, '#91D3FF');
   sky.draw();
 
@@ -52,6 +53,14 @@ Game.prototype.draw = function() {
 
   var feedingZone = new Area(this.canvas, canvasWidth / 2 - (canvasWidth / 4 / 2), sky.heigth + 5, canvasWidth / 4, 35, '#C6CAED');
   feedingZone.draw();
+
+  // ---- BIRDS & DOG
+
+  var bird = new Bird(this.canvas);
+  bird.draw();
+//debugger;
+  var dog = new Dog(this.canvas);
+  dog.draw();
 }
 
 function checkCollission() {

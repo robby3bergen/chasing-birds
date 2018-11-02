@@ -2,10 +2,10 @@
 
 function Dog(canvas) {
   this.canvasContext = canvas.getContext('2d');
-  this.position.x = null;
-  this.position.y = null;
-  this.direction.x = null;
-  this.direction.y = null;
+  this.backgroundColor = 'brown';
+  this.size = 20;
+  this.position = {x: 240, y: 120};
+  this.direction = {x: 1, y: 1};      // x + 1 to move right, x -1 to move left, y + 1 to move down, y - 1 to move up
   this.speed = 1;
 }
 
@@ -31,5 +31,6 @@ Dog.prototype.updatePosition = function() {
 
 Dog.prototype.draw = function() {
   // draw the dog on the canvas
-
+  this.canvasContext.fillStyle = this.backgroundColor;
+  this.canvasContext.fillRect(this.position.x, this.position.y, this.size, this.size);
 }
