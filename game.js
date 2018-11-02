@@ -9,19 +9,15 @@ Game.prototype.start = function() {
   // start the game
 
   // add eventListener
-  window.addEventListener('click', onClick);
+  document.addEventListener('click', onClick);
 
 }
 
-Game.prototype.stop = function(callback) {
+Game.prototype.onGameOver = function(callback) {
   // use this callback function to end the game when the birds are dead or the player stops the game
 
   // remove eventListener
-  window.removeEventListener('click', onClick);
-}
-
-function buildHtmlPage() {
-  // create the webpage to display the game
+  document.removeEventListener('click', onClick);
 }
 
 function getCanvasContext() {

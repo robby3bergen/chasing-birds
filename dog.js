@@ -9,12 +9,12 @@ function Dog(canvas) {
   this.speed = 1;
 }
 
-Dog.prototype.play() = function() {
+Dog.prototype.play = function() {
   // make the dog move randomly on the ground (area)
 
 }
 
-Dog.prototype.chaseBirds() = function() {
+Dog.prototype.chaseBirds = function() {
   // make the dog chase the birds in the feeding area
 
 }
@@ -31,5 +31,5 @@ Dog.prototype.updatePosition = function() {
 
 Dog.prototype.draw = function() {
   // draw the dog on the canvas
-  
+
 }
