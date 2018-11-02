@@ -34,14 +34,19 @@ function main() {
     var html = `
       <h1>Chasing Birds</h1>
       <h2>03:00</h2>
+      <canvas></canvas>
       <button>STOP</button>
-      <canvas width="600" heigth="400"></canvas>
     `
     buildDOM(html);
 
     // add eventListener
     var button = document.querySelector('button');
     button.addEventListener('click', destroyGameScreen);
+
+    // start the game
+    var canvas = document.querySelector('canvas');
+    var game = new Game(canvas);
+    game.start();
   }
 
   function destroyGameScreen() {
