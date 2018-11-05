@@ -10,29 +10,40 @@ function Bird(canvas) {
   this.step = {x: 1, y: 1}          // x + 1 to move right, x -1 to move left, y + 1 to move down, y - 1 to move up
   this.speed = 0.5;
   this.state = 'flying';            // status of the bird can be: flying, hungry, feeding or dead
+
+  this.intervalId = window.setInterval(function() {
+    if (this.state === 'flying') {
+      this.setDestination(0, 0, 300, 100);
+    } else if (this.state === 'feeding') {
+      this.setDestination(112, 105, 75, 35);
+    } else if (this.state === 'dead') {
+      this.setDestination(0, 100, 300, 50);
+      clearInterval(this.intervalId);
+    }
+  }.bind(this), 1000);
 }
 
 Bird.prototype.fly = function(area) {
-  // make the bird move randomly in the flying area
-  this.setDestination(55, 15);
-  
   // set state to 'flying'
   this.state = 'flying';
 
+  // make the bird move randomly in the flying area
+  this.setDestination(0, 0, 300, 100)
 }
 
 Bird.prototype.feed = function(area) {
-  // move the bird to a random position in the feeding area
-  this.setDestination(135, 115);
-  
   // set status to 'feeding'
   this.state = 'feeding';
+
+  // move the bird to a random position in the feeding area
+  this.setDestination(112, 105, 75, 35);
 }
 
-Bird.prototype.setDestination = function(x, y) {
-  // set distination
-  this.destination.x = x;
-  this.destination.y = y;
+Bird.prototype.setDestination = function(xBoundery, yBoundery, areaWidth, areaHeight) {
+  // set destination according to bounderies
+  this.destination.x = Math.floor(Math.random() * (areaWidth - this.size)) + xBoundery; // create value for x between x and width
+  this.destination.y = Math.floor(Math.random() * (areaHeight - this.size)) + yBoundery; // create value for y between y and height
+
 }
 
 Bird.prototype.updatePosition = function() {

@@ -6,17 +6,23 @@ function Game(canvas) {
   this.animation = null; // use this number to cancel the animation refresh
   this.gameOver = false;
 
+  // areas
+  this.sky = new Sky(this.canvas);
+  this.ground = new Ground(this.canvas);
+  this.feedingZone = new FeedingZone(this.canvas);
+
+  // characters
   this.bird = new Bird(this.canvas);
   this.dog = new Dog(this.canvas);
 }
 
 Game.prototype.start = function() {
-
   // start screen rendering loop
   var main = function() {
     this.animation = window.requestAnimationFrame(main);
     this.update();
     this.draw();
+    this.checkCollission();
   }.bind(this)
 
   main();
@@ -28,8 +34,10 @@ Game.prototype.start = function() {
       console.log('the bird was clicked');
       if (this.bird.state === 'flying') {
         this.bird.feed();
+        this.dog.chaseBirds(this.bird);
       } else if (this.bird.state === 'feeding') {
-        this.bird.fly()
+        this.bird.fly();
+        this.dog.play();
       }
     }
     console.log('x = ' + mousePosition.x + 'y = ' + mousePosition.y);
@@ -57,7 +65,7 @@ Game.prototype.onGameOver = function(callback) {
 Game.prototype.update = function() {
   // update the position of the birds and the dog
   this.bird.updatePosition();
-  
+  this.dog.updatePosition();  
 }
 
 Game.prototype.draw = function() {
@@ -68,17 +76,13 @@ Game.prototype.draw = function() {
   var canvasHeigth = this.canvas.height;
   var canvasWidth = this.canvas.width;
 
-  // ---- AREAS ----
-  var sky = new Sky(this.canvas);
-  sky.draw();
+  // areas
 
-  var ground = new Ground(this.canvas);
-  ground.draw();
+  this.sky.draw();
+  this.ground.draw();
+  this.feedingZone.draw();
 
-  var feedingZone = new FeedingZone(this.canvas);
-  feedingZone.draw();
-
-  // ---- BIRDS & DOG
+  // characters
 
   this.bird.draw();
   this.dog.draw();
@@ -94,8 +98,15 @@ Game.prototype.getMousePosition = function(event) {
   return {x: mouseX, y: mouseY};
 }
 
-function checkCollission() {
+Game.prototype.checkCollission = function() {
   // check if the dog has caught a bird
-
+//debugger;
+  // Pythagoras phrase: AB2 + BC2 = AC2
+  var centerToCenterOnCollission = Math.sqrt(this.bird.size + this.dog.size);
+  var centerToCenter = Math.sqrt((this.bird.x + this.bird.size / 2) + (this.dog.x + this.dog.size / 2));
+  if (centerToCenter <= centerToCenterOnCollission) {
+    this.bird.state = 'dead';
+    console.log('bird is dead!');
+  }
 }
 
