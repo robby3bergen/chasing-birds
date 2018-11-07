@@ -28,6 +28,8 @@ CANVAS
 ## Data structure
 Classes and methods definition.
 
+### main.js
+
 ### game.js
 -- properties
 canvasContext;
@@ -164,4 +166,4 @@ URls for the project repo and deploy
 
 ### Slides
 URls for the project presentation (slides)
-[Link Slides.com](http://slides.com)
+https://slides.com/robby3bergen/deck-1
