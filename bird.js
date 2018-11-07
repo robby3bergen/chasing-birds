@@ -14,12 +14,12 @@ function Bird(canvas) {
 
   // the bird
   this.backgroundColor = 'black';
-  this.size = 10.00;
+  this.size = 0.8;
   this.position = {x: Math.floor(Math.random() * this.sky.width - this.size - 20) + 10 , y: -15};
   this.destination = {x: 50, y: 0}; // random destination within the destination area
   this.distance = {x: 0, y: 0};
   this.step = {x: 1, y: 1}          // x + 1 to move right, x -1 to move left, y + 1 to move down, y - 1 to move up
-  this.speed = 0.5;
+  this.speed = 0.4;
   this.state = 'happy';            // status of the bird can be: happy, hungry, feeding or dead
   this.health = 10;
   this.healthTimerId;
@@ -50,6 +50,7 @@ Bird.prototype.land = function() {
 
 Bird.prototype.die = function() {
   // set state to 'dead'
+  this.backgroundColor = 'gray';
 
   // move the bird to the ground
   this.destination.x = this.position.x
@@ -78,6 +79,7 @@ Bird.prototype.updatePosition = function() {
   if (this.position.x !==  this.destination.x || this.position.y !== this.destination.y ) {
     this.position.x += this.step.x * this.speed;
     this.position.y += this.step.y * this.speed;
+    this.size += this.step.y * 0.05;
   }
 }
 
@@ -88,6 +90,7 @@ Bird.prototype.updateState = function() {
   this.position.y + this.size <= this.feedingZone.y + this.feedingZone.height) {
     if (this.state === 'landing') { // we don't want any dead to be flying around
       this.state = 'feeding';
+      this.backgroundColor = 'black';
     }
   }
   if (this.state === 'feeding') {
@@ -139,6 +142,7 @@ Bird.prototype.draw = function(canvas) {
 /* ============ Events ============ */
 
 Bird.prototype.isColliding = function(object) {
+  //windows.clearInterval(this.healthTimerId);
   if (this.state === 'feeding') {
     if (this.position.x + this.size > object.position.x &&
       this.position.x < object.position.x + object.size &&
@@ -168,6 +172,7 @@ Bird.prototype.onClick = function() {
       // send the bird to the sky
       this.fly();
       this.moveRandomly();
+      this.getsHungry();
       break;
     case 'dead':
       // lie dead and do nothing
@@ -183,6 +188,7 @@ Bird.prototype.onClick = function() {
 /* ============ Helper Functions ============ */
 
 Bird.prototype.setHealth = function() {
+  this.health = 10;
   this.healthTimerId = window.setInterval(function(){
     this.health--;
     console.log('health: ' + this.health);
