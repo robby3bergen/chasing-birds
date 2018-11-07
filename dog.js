@@ -13,6 +13,8 @@ function Dog(canvas) {
 
   // the dog
   this.backgroundColor = 'brown';
+  this.spriteCount = 0;
+  this.spriteFrameRate = 4;
   this.size = 20;
   this.position = {x: 240, y: 120};
   this.destination = {x: 245, y: 115}
@@ -92,8 +94,28 @@ Dog.prototype.moveRandomly = function() {
 
 Dog.prototype.draw = function() {
   // draw the dog on the canvas
-  this.canvasContext.fillStyle = this.backgroundColor;
-  this.canvasContext.fillRect(this.position.x, this.position.y, this.size, this.size);
+  var dogSprite = new Image(20, 20); // image size = 52 x 340
+  if (this.destination.x < this.position.x) {
+    dogSprite.src = 'images/dog_walking_left.png';
+    this.spriteFrameRate++;
+  } else if (this.destination.x > this.position.x) {
+    dogSprite.src = 'images/dog_walking_right.png';
+    this.spriteFrameRate++;
+  } else {
+    dogSprite.src = 'images/dog_walking_left.png';
+  }
+
+  // replace imgage on every 4th draw
+  if (this.spriteFrameRate % 4 === 0) {
+    this.spriteCount++;
+  }
+  
+  // dertime which frame to use
+  var currentFrame = this.spriteCount % 10;             // there are 10 sprites in dog.png
+  var frameWidth = 52;
+  var frameHeight = 340 / 10;
+
+  this.canvasContext.drawImage(dogSprite, 0, currentFrame * frameHeight, frameWidth, frameHeight, this.position.x, this.position.y, this.size, this.size)
 }
 
 
