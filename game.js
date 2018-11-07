@@ -1,10 +1,16 @@
 'use strict';
 
+/* ============ Game Constructor ============ */
+
 function Game(canvas) {
   this.canvas = canvas;
   this.canvasContext = canvas.getContext('2d');
   this.animation = null; // use this number to cancel the animation refresh
   this.gameOver = false;
+
+  this.clicks = 0;
+  this.missedClicks = 0;
+  this.birdsAlive = 0;
 
   // areas
   this.sky = new Sky(this.canvas);
@@ -16,77 +22,97 @@ function Game(canvas) {
   this.dog = new Dog(this.canvas);
 }
 
+
+/* ============ Game Rendering ============ */
+
 Game.prototype.start = function() {
   // start screen rendering loop
   var main = function() {
     this.animation = window.requestAnimationFrame(main);
     this.update();
     this.draw();
-    this.checkCollission();
+    this.checkCollissions();
   }.bind(this)
 
   main();
 
-  // add eventListener
-  var onClick = function(event) {
-    var mousePosition = this.getMousePosition(event);
-    if (this.bird.clicked(mousePosition)) {
-      console.log('the bird was clicked');
-      if (this.bird.state === 'flying') {
-        this.bird.feed();
-        this.dog.chaseBirds(this.bird);
-      } else if (this.bird.state === 'feeding') {
-        this.bird.fly();
-        this.dog.play();
-      }
-    }
-    console.log('x = ' + mousePosition.x + 'y = ' + mousePosition.y);
-
-  }.bind(this)
-
+  // add event listener to check for clicks
+  var onClick = this.onClick.bind(this);
   this.canvas.addEventListener('mousedown', onClick);
-
 }
 
-Game.prototype.checkGameConditions = function() {
-  
-}
-
-Game.prototype.onGameOver = function(callback) {
-  // use this callback function to end the game when the birds are dead or the player stops the game
-
-  // cancel animations screen refreshing
-  window.cancelAnimationFrame(animation);
-
-  // remove eventListener
-  this.canvas.removeEventListener('click', onClick);
-}
 
 Game.prototype.update = function() {
   // update the position of the birds and the dog
   this.bird.updatePosition();
-  this.dog.updatePosition();  
+  this.bird.updateState();
+  this.dog.updatePosition();
 }
+
 
 Game.prototype.draw = function() {
   // clear the canvas
   this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
   
-  // draw on the canvas
-  var canvasHeigth = this.canvas.height;
-  var canvasWidth = this.canvas.width;
-
-  // areas
-
+  // draw areas
   this.sky.draw();
   this.ground.draw();
   this.feedingZone.draw();
 
-  // characters
-
+  // draw characters
   this.bird.draw();
   this.dog.draw();
 }
+
+
+Game.prototype.checkGameOverConditions = function(callback) {
+  // use this callback function to end the game when the birds are dead or the player stops the game
+
+
+  // cancel animations screen refreshing
+  window.cancelAnimationFrame(animation);
+
+  // remove eventListener
+  this.canvas.removeEventListener('click', this.onClick);
+}
+
+
+/* ============ Events ============ */
+
+Game.prototype.checkCollissions = function() {
+  // check if the dog has caught a bird
+  if (this.bird.isColliding(this.dog)) {
+    // continue playing
+    this.dog.play();
+  }
+}
+
+
+Game.prototype.onClick = function(event) {
+  // get mouse position
+  var mousePosition = this.getMousePosition(event);
+  console.log('x = ' + mousePosition.x + 'y = ' + mousePosition.y);
+
+  // compare mouse position with bird position to check if the bird was clicked
+  var birdClicked = 
+  mousePosition.x >= this.bird.position.x &&
+  mousePosition.x <= this.bird.position.x + this.bird.size &&
+  mousePosition.y >= this.bird.position.y &&
+  mousePosition.y <= this.bird.position.y + this.bird.size;
+
+  // keep scores
+  if (birdClicked) {
+    console.log('you clicked a ' + this.bird.state + ' bird!')
+    this.clicks++;
+    this.bird.onClick();
+    //this.dog.chaseBirds(this.bird);
+  } else {
+    this.missedClicks++;
+  }
+}
+
+
+/* ============ Helper Functions ============ */
 
 Game.prototype.getMousePosition = function(event) {
   var rect = this.canvas.getBoundingClientRect();
@@ -97,16 +123,3 @@ Game.prototype.getMousePosition = function(event) {
 
   return {x: mouseX, y: mouseY};
 }
-
-Game.prototype.checkCollission = function() {
-  // check if the dog has caught a bird
-//debugger;
-  // Pythagoras phrase: AB2 + BC2 = AC2
-  var centerToCenterOnCollission = Math.sqrt(this.bird.size + this.dog.size);
-  var centerToCenter = Math.sqrt((this.bird.x + this.bird.size / 2) + (this.dog.x + this.dog.size / 2));
-  if (centerToCenter <= centerToCenterOnCollission) {
-    this.bird.state = 'dead';
-    console.log('bird is dead!');
-  }
-}
-

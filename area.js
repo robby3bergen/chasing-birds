@@ -10,12 +10,12 @@ function Sky(canvas) {
   this.x = 0;
   this.y = 0;
   this.width = this.canvas.width;
-  this.heigth = 100;
+  this.height = 100;
 }
 
 Sky.prototype.draw = function() {
   this.canvasContext.fillStyle = this.backgroundColor;
-  this.canvasContext.fillRect(this.x, this.y, this.width, this.heigth);
+  this.canvasContext.fillRect(this.x, this.y, this.width, this.height);
 }
 
 // ========================================================================
@@ -28,12 +28,12 @@ function Ground(canvas) {
   this.x = 0;
   this.y = 100;
   this.width = this.canvas.width;
-  this.heigth = this.canvas.height - this.y;
+  this.height = this.canvas.height - this.y;
 }
 
 Ground.prototype.draw = function() {
   this.canvasContext.fillStyle = this.backgroundColor;
-  this.canvasContext.fillRect(this.x, this.y, this.width, this.heigth);
+  this.canvasContext.fillRect(this.x, this.y, this.width, this.height);
 }
 
 // ========================================================================
@@ -46,12 +46,12 @@ function FeedingZone(canvas) {
   this.x = this.canvas.width / 2 - (this.canvas.width / 8);
   this.y = 105;
   this.width = this.canvas.width / 4;
-  this.heigth = 35;
+  this.height = 35;
 }
 
 FeedingZone.prototype.draw = function() {
   this.canvasContext.fillStyle = this.backgroundColor;
-  this.canvasContext.fillRect(this.x, this.y, this.width, this.heigth);
+  this.canvasContext.fillRect(this.x, this.y, this.width, this.height);
 }
 
 // ========================================================================

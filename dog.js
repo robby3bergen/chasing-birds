@@ -1,7 +1,17 @@
 'use strict';
 
+/* ============ Dog Constructor ============ */
+
 function Dog(canvas) {
+  // canvas
+  this.canvas = canvas;
   this.canvasContext = canvas.getContext('2d');
+
+  // areas (to use for destination coordinates)
+  this.ground = new Ground(this.canvas);
+  this.feedingZone = new FeedingZone(this.canvas);
+
+  // the dog
   this.backgroundColor = 'brown';
   this.size = 20;
   this.position = {x: 240, y: 120};
@@ -11,14 +21,14 @@ function Dog(canvas) {
   this.speed = 0.5;
   this.state = 'playing';
 
-  this.intervalId = window.setInterval(function() {
-    if (this.state === 'playing') {
-      this.setDestination(0, 100, 300, 50);
-    } else if (this.state === 'chasing') {
-      this.setDestination(112, 105, 75, 35);
-    }
-  }.bind(this), 3000);
+  this.intervalId;
+
+  // start moving
+  this.moveRandomly();
 }
+
+
+/* ============ Dog Actions ============ */
 
 Dog.prototype.play = function() {
   // make the dog move randomly on the ground (area)
@@ -26,8 +36,8 @@ Dog.prototype.play = function() {
   // set state to 'flying'
   this.state = 'playing';
 
-  // make the bird move randomly in the flying area
-  this.setDestination(0, 100, 300, 50)
+  // make the dog move randomly in the ground area
+  this.setDestination(this.ground.x + 20, this.ground.y + 10, this.ground.width - 20, this.ground.height - 10);
 }
 
 Dog.prototype.chaseBirds = function(bird) {
@@ -41,17 +51,16 @@ Dog.prototype.chaseBirds = function(bird) {
   //this.setDestination(bird.destination.x, bird.destination.y, bird.size, bird.size);
 }
 
-Dog.prototype.setDestination = function(xBoundery, yBoundery, areaWidth, areaHeight) {
+
+/* ============ Moving the dog ============ */
+
+Dog.prototype.setDestination = function(areaX, areaY, areaWidth, areaHeight) {
   // set destination according to bounderies
-  this.destination.x = Math.floor(Math.random() * (areaWidth - this.size)) + xBoundery; // create value for x between x and width
-  this.destination.y = Math.floor(Math.random() * (areaHeight - this.size)) + yBoundery; // create value for y between y and height
+  this.destination.x = Math.floor(Math.random() * (areaWidth - this.size)) + areaX; // create value for x between x and width
+  this.destination.y = Math.floor(Math.random() * (areaHeight - this.size)) + areaY; // create value for y between y and height
 
 }
 
-Dog.prototype.onCollission = function() {
-  // repeat playing
-
-}
 
 Dog.prototype.updatePosition = function() {
     // calculate relative step
@@ -70,8 +79,27 @@ Dog.prototype.updatePosition = function() {
     }
 }
 
+Dog.prototype.moveRandomly = function() {
+  this.intervalId = window.setInterval(function() {
+    if (this.state === 'playing') {
+      this.setDestination(0, 100, 300, 50);
+    } else if (this.state === 'chasing') {
+      this.setDestination(112, 105, 75, 35);
+    }
+  }.bind(this), 3000);
+}
+
+
 Dog.prototype.draw = function() {
   // draw the dog on the canvas
   this.canvasContext.fillStyle = this.backgroundColor;
   this.canvasContext.fillRect(this.position.x, this.position.y, this.size, this.size);
+}
+
+
+/* ============ Events ============ */
+
+Dog.prototype.onCollission = function() {
+  // repeat playing
+
 }
