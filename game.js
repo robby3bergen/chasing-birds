@@ -25,13 +25,14 @@ function Game(canvas) {
 
 /* ============ Game Rendering ============ */
 
-Game.prototype.start = function() {
+Game.prototype.start = function(callback) {
   // start screen rendering loop
   var main = function() {
     this.animation = window.requestAnimationFrame(main);
     this.update();
     this.draw();
     this.checkCollissions();
+    this.checkGameOverConditions(callback);
   }.bind(this)
 
   main();
@@ -39,6 +40,10 @@ Game.prototype.start = function() {
   // add event listener to check for clicks
   var onClick = this.onClick.bind(this);
   this.canvas.addEventListener('mousedown', onClick);
+
+  // display remaining play time
+  var timeLeft = document.querySelector('h2');
+
 }
 
 
@@ -67,13 +72,25 @@ Game.prototype.draw = function() {
 
 Game.prototype.checkGameOverConditions = function(callback) {
   // use this callback function to end the game when the birds are dead or the player stops the game
+  if (this.checkAllBirdsDead(this.bird)) {
+    // cancel animations screen refreshing
+    window.cancelAnimationFrame(this.animation);
+
+    // remove eventListener
+    this.canvas.removeEventListener('click', this.onClick);
+    
+    // call the main.destroyGameScreen method
+    callback();
+  }  
+}
 
 
-  // cancel animations screen refreshing
-  window.cancelAnimationFrame(animation);
-
-  // remove eventListener
-  this.canvas.removeEventListener('click', this.onClick);
+Game.prototype.checkAllBirdsDead = function(bird) {
+  if (bird.state === 'dead') {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 
@@ -102,7 +119,7 @@ Game.prototype.onClick = function(event) {
 
   // keep scores
   if (birdClicked) {
-    console.log('you clicked a ' + this.bird.state + ' bird!')
+    console.log('you clicked a ' + this.bird.state + ' bird!');
     this.clicks++;
     this.bird.onClick();
     //this.dog.chaseBirds(this.bird);

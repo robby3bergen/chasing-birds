@@ -14,19 +14,21 @@ function Dog(canvas) {
   // the dog
   this.backgroundColor = 'brown';
   this.spriteCount = 0;
-  this.spriteFrameRate = 4;
-  this.size = 20;
-  this.position = {x: 240, y: 120};
-  this.destination = {x: 245, y: 115}
+  this.spriteFrameRate = 6;
+  this.size = 50;
+  this.position = {x: this.ground.x, y: this.ground.y};
+  this.destination = {x: 245, y: 215}
   this.distance = {x: 0, y: 0};
   this.step = {x: 1, y: 1}          // x + 1 to move right, x -1 to move left, y + 1 to move down, y - 1 to move up
   this.speed = 0.5;
   this.state = 'playing';
 
   this.intervalId;
+  this.barkIntervalId;
 
   // start moving
   this.moveRandomly();
+  //this.barking();
 }
 
 
@@ -52,6 +54,18 @@ Dog.prototype.chaseBirds = function(bird) {
   this.setDestination(112, 105, 75, 35);
   //this.setDestination(bird.destination.x, bird.destination.y, bird.size, bird.size);
 }
+
+// Dog.prototype.barking = function() {
+//   window.clearInterval(this.barkIntervalId);
+
+//   var bark = new Audio('sounds/dog_barking.wav');
+//   var dl = Math.floor(Math.random() * 3000);
+//   this.barkIntervalId = window.setInterval(function() {
+//     //if (dog.state === 'chasing') {
+//       bark.play();
+//     //}
+//   }, dl);
+// }
 
 
 /* ============ Moving the dog ============ */
@@ -84,29 +98,29 @@ Dog.prototype.updatePosition = function() {
 Dog.prototype.moveRandomly = function() {
   this.intervalId = window.setInterval(function() {
     if (this.state === 'playing') {
-      this.setDestination(0, 100, 300, 50);
+      this.setDestination(this.ground.x, this.ground.y, this.ground.width, this.ground.height);
     } else if (this.state === 'chasing') {
-      this.setDestination(112, 105, 75, 35);
+      this.setDestination(this.feedingZone.x, this.feedingZone.y, this.feedingZone.width, this.feedingZone.height);
     }
-  }.bind(this), 3000);
+  }.bind(this), 1500);
 }
 
 
 Dog.prototype.draw = function() {
   // draw the dog on the canvas
-  var dogSprite = new Image(20, 20); // image size = 52 x 340
+  var sprite = new Image(20, 20); // image size = 52 x 340
   if (this.destination.x < this.position.x) {
-    dogSprite.src = 'images/dog_walking_left.png';
+    sprite.src = 'images/dog_walking_left.png';
     this.spriteFrameRate++;
   } else if (this.destination.x > this.position.x) {
-    dogSprite.src = 'images/dog_walking_right.png';
+    sprite.src = 'images/dog_walking_right.png';
     this.spriteFrameRate++;
   } else {
-    dogSprite.src = 'images/dog_walking_left.png';
+    sprite.src = 'images/dog_walking_left.png';
   }
 
   // replace imgage on every 4th draw
-  if (this.spriteFrameRate % 4 === 0) {
+  if (this.spriteFrameRate % 6 === 0) {
     this.spriteCount++;
   }
   
@@ -115,7 +129,7 @@ Dog.prototype.draw = function() {
   var frameWidth = 52;
   var frameHeight = 340 / 10;
 
-  this.canvasContext.drawImage(dogSprite, 0, currentFrame * frameHeight, frameWidth, frameHeight, this.position.x, this.position.y, this.size, this.size)
+  this.canvasContext.drawImage(sprite, 0, currentFrame * frameHeight, frameWidth, frameHeight, this.position.x, this.position.y, this.size, this.size)
 }
 
 

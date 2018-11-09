@@ -12,14 +12,74 @@ body {
   padding: 0;
 }
 
+h1 {
+  text-align: center;
+  color: #f0fff0;
+}
+
+.transparent-box {
+  width: 70%;
+  margin: 0 auto;
+  min-height: 311px;
+  padding: 10px;
+  background: rgb(0, 0, 0, 0.3);
+  color: #f0fff0;
+  border-radius: 5px;
+}
+
+.game-over {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+canvas {
+  /* position: absolute;
+  top: 0;
+  left: 0; */
+  border: 15px solid #1c1852;
+  border-radius: 20px;
+}
+
 button {
   display: block;
 }
 
-canvas {
-  border: 1px solid black;
-  width: 70%;
-  margin: 0 15%;
-  border: 15px solid blue;
+#btn-start {
+  width: 70px;
+  height: 30px;
+  margin: 20px auto;
+}
+
+.timer {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  z-index: 1;
+  top: 15px;
+  color: #f0fff0;
+}
+
+.transparency {
+  width: 100%;
+  background: rgb(0, 0, 0, 0.4);
+  padding: 30px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.container {
+  position: relative;
+  width: 760px;   /* 730px + 15px + 15px for the border */
+  height: 440px;  /* 365px + 15px + 15px for the border */
+  margin: 0 auto;
+}
+
+.container.background {
+  background: url('images/park.png');
+  border: 15px solid #1c1852;
   border-radius: 20px;
 }
