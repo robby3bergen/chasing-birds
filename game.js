@@ -31,6 +31,7 @@ Game.prototype.start = function(callback) {
     this.animation = window.requestAnimationFrame(main);
     this.update();
     this.draw();
+    this.dog.checkForBirds(this.bird);
     this.checkCollissions();
     this.checkGameOverConditions(callback);
   }.bind(this)

@@ -91,7 +91,7 @@ Bird.prototype.updateState = function() {
   this.position.x + this.size <= this.feedingZone.x + this.feedingZone.width &&
   this.position.y >= this.feedingZone.y &&
   this.position.y + this.size <= this.feedingZone.y + this.feedingZone.height) {
-    if (this.state != 'dead') { // we don't want any dead to be flying around
+    if (this.state !== 'dead' && this.state !== 'feeding')  { // we don't want any dead to be flying around
       this.state = 'feeding';
       this.sprite.src = 'images/bird_moving_left_yellow.png';
       this.getsHungry();

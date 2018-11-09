@@ -39,20 +39,37 @@ Dog.prototype.play = function() {
   
   // set state to 'flying'
   this.state = 'playing';
+  this.speed = 0.5;
 
   // make the dog move randomly in the ground area
   this.setDestination(this.ground.x + 20, this.ground.y + 10, this.ground.width - 20, this.ground.height - 10);
 }
 
+Dog.prototype.checkForBirds = function(bird) {
+  console.log(bird.state)
+  if (bird.state === 'feeding' && this.state !== 'chasing') {
+    this.speed = 2;
+    this.chaseBirds(bird);
+  } else if (bird.state !== 'feeding' && bird.state !== 'dead' && this.state === 'chasing') {
+    console.log('hey')
+    this.moveRandomly();
+  }
+}
+
 Dog.prototype.chaseBirds = function(bird) {
   // make the dog chase the birds in the feeding area
+  window.clearInterval(this.intervalId);
+
+  var barkSound = new Audio('sounds/dog_barking.wav');
+  barkSound.play();
+  //barkSound.play(); 
   
   // set status to 'feeding'
   this.state = 'chasing';
 
   // move the bird to a random position in the feeding area
-  this.setDestination(112, 105, 75, 35);
-  //this.setDestination(bird.destination.x, bird.destination.y, bird.size, bird.size);
+  //this.setDestination(bird.destination.x, bird.destination.y, bird.destination.x + bird.size, bird.destination.y + bird.size);
+  this.setDestination(bird.destination.x, bird.destination.y, bird.size, bird.size);
 }
 
 // Dog.prototype.barking = function() {
@@ -74,7 +91,6 @@ Dog.prototype.setDestination = function(areaX, areaY, areaWidth, areaHeight) {
   // set destination according to bounderies
   this.destination.x = Math.floor(Math.random() * (areaWidth - this.size)) + areaX; // create value for x between x and width
   this.destination.y = Math.floor(Math.random() * (areaHeight - this.size)) + areaY; // create value for y between y and height
-
 }
 
 
@@ -93,14 +109,14 @@ Dog.prototype.updatePosition = function() {
       this.position.x += this.step.x * this.speed;
       this.position.y += this.step.y * this.speed;
     }
+
 }
 
 Dog.prototype.moveRandomly = function() {
+  this.play();
   this.intervalId = window.setInterval(function() {
     if (this.state === 'playing') {
       this.setDestination(this.ground.x, this.ground.y, this.ground.width, this.ground.height);
-    } else if (this.state === 'chasing') {
-      this.setDestination(this.feedingZone.x, this.feedingZone.y, this.feedingZone.width, this.feedingZone.height);
     }
   }.bind(this), 1500);
 }
@@ -128,7 +144,6 @@ Dog.prototype.draw = function() {
   var currentFrame = this.spriteCount % 10;             // there are 10 sprites in dog.png
   var frameWidth = 52;
   var frameHeight = 340 / 10;
-
   this.canvasContext.drawImage(sprite, 0, currentFrame * frameHeight, frameWidth, frameHeight, this.position.x, this.position.y, this.size, this.size)
 }
 
@@ -137,5 +152,6 @@ Dog.prototype.draw = function() {
 
 Dog.prototype.onCollission = function() {
   // repeat playing
+  this.moveRandomly();
 
 }
